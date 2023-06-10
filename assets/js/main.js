@@ -143,9 +143,9 @@ const menu = () => {
       <input type="button" value="X" class="btn" id="modal-btn-close" onclick="modalClose()">
       <h4>Остались вопросы?</h4>
       <p>Получите консультацию по телефону или напишите нам</p>
-      <input type="text" placeholder="Ваше имя" id="nameMask" onkeypress="noDigits(event)">
-      <input type="tel" name="" placeholder="Телефон" class="phoneMask" id="modalTel">
-      <input type="button" value="Оставить заявку" id="btnCloseAdaptive" class="btn" onclick="sendRequest()">
+      <input type="text" placeholder="Ваше имя" id="nameMask" onkeypress="noDigits(event) required">
+      <input type="tel" name="" placeholder="Телефон" class="phoneMask" id="modalTel" required>
+      <button id="btnCloseAdaptive" class="btn" onclick="sendMail()" >Отправить</button>
       <p id="warningMessage" style="display: none; color: red;"></p>
     `;
     modalWindow.style = 'max-width: 350px; min-width: 230px; height: 400px;';
@@ -171,12 +171,26 @@ const phoneInput = document.querySelector(".phoneMask")
   })
   
   const footerRequest = () => {
-    let f1 = document.querySelector('.send_request input[type=text]')
+    let f1 = document.querySelector('.send_request input[type=text]');
     let f2 = document.querySelector('.send_request input[type=tel]');
+
+    var params = {
+      name: f1.value,
+      email: f2.value,
+    };
+  
+    const serviceID = "service_n3fvhtp";
+    const templateID = "template_0xs5578";
     let modalWindow = document.getElementById('modal');
     let warningMessage = document.getElementById('warningMessage1');
     if (f2.value.length === 16 && f1.value.length > 1) {
     modalWindow.classList.add('active');
+    emailjs.send(serviceID, templateID, params)
+    .then(res=>{
+        document.getElementById("nameMask").value = "";
+        document.getElementById("modalTel").value = "";
+        console.log(res);
+    })
     modalWindow.innerHTML = `
         <input type="button" value="X" class="btn" id="modal-btn-close" onclick="modalClose()">
         <h4>Спасибо!</h4>
@@ -210,5 +224,44 @@ function noDigits(event) {
 const modalUpdate = () => {
   let modalWindow = document.getElementById('modal');
   modalWindow.innerHTML = '';
+
+}
+function sendMail() {
+  var params = {
+    name: document.getElementById("nameMask").value,
+    email: document.getElementById("modalTel").value,
+  };
+
+  const serviceID = "service_n3fvhtp";
+  const templateID = "template_0xs5578";
+
+  let modalWindow = document.getElementById('modal');
+  let phoneModal = document.getElementById('modalTel');
+  let inputName = document.getElementById('nameMask');
+  let warningMessage = document.getElementById('warningMessage');
+
+  if (phoneModal.value.length === 16 && inputName.value.length > 1) {
+    emailjs.send(serviceID, templateID, params)
+    .then(res=>{
+        document.getElementById("nameMask").value = "";
+        document.getElementById("modalTel").value = "";
+        console.log(res);
+    })
+    .catch(err=>console.log(err));
+    // Все данные введены корректно
+    modalWindow.innerHTML = `
+      <input type="button" value="X" class="btn" id="modal-btn-close" onclick="modalClose()">
+      <h4>Спасибо!</h4>
+      <p>Ваша заявка отправлена!</p>
+    `;
+    modalWindow.style = 'width: 200px; height: 130px; text-align:center;';
+    let modalCloseButton = document.getElementById('modal-btn-close');
+    modalCloseButton.style = 'bottom: 91%; left: 91%;';
+  } else {
+    // Отображение предупреждающего сообщения
+    warningMessage.style.display = 'block';
+    warningMessage.textContent = 'Пожалуйста, введите все необходимые данные.';
+  }
+    
 
 }

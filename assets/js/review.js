@@ -23,8 +23,24 @@ const send_rw = () => {
 
 
 const send_review = () => {
-
+  let textArea = document.querySelector('textarea')
+  let textEmail = document.getElementById('textEmail')
+  let textName = document.getElementById('textName')
+  var params = {
+    name: textArea.value,
+    email: textEmail.value,
+    text: textName.value,
+  };
+  const serviceID = "service_n3fvhtp";
+  const templateID = "template_d4xsltf";
     modalWindow.classList.add('active')
+    emailjs.send(serviceID, templateID, params)
+    .then(res=>{
+        textArea.value = "";
+        textEmail.value = "";
+        textName.value = "";
+        console.log(res);
+    })
     modalWindow.innerHTML = `
         <input type="button" value="X" class="btn" id="modal-btn-close" onclick="modalClose()">
         <h4>Спасибо!</h4>
