@@ -143,7 +143,7 @@ const menu = () => {
       <input type="button" value="X" class="btn" id="modal-btn-close" onclick="modalClose()">
       <h4>Остались вопросы?</h4>
       <p>Получите консультацию по телефону или напишите нам</p>
-      <input type="text" placeholder="Ваше имя" id="nameMask" onkeypress="noDigits(event) required">
+      <input type="text" placeholder="Ваше имя" id="nameMask" onkeypress="noDigits(event)" required">
       <input type="tel" name="" placeholder="Телефон" class="phoneMask" id="modalTel" required>
       <button id="btnCloseAdaptive" class="btn" onclick="sendMail()" >Отправить</button>
       <p id="warningMessage" style="display: none; color: red;"></p>
